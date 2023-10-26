@@ -71,7 +71,7 @@ export default function Signup() {
         localStorage.setItem("authToken", token);
         localStorage.setItem("userInfo", userName);
         signUpContext(token, userName);
-        navigate("/Netflix");
+        navigate("/");
       } else {
         alert("Sign in to create new account");
         navigate("/signup");

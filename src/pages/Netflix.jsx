@@ -23,7 +23,6 @@ function Netflix() {
   };
 
  
-console.log(localStorage.getItem("authToken"));
 
 var b=0;
 

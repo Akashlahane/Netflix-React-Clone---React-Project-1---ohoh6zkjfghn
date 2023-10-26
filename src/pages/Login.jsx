@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackgroundImage from "../components/BackgroundImage";
 import Header from "../components/Header";
-import Netflix from "./Netflix";
+
 
 function Login() {
   const { signInContext } = useUser();
