@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import Card from "./Card";
+
 export default React.memo(function CardSlider({ data, title }) {
   const listRef = useRef();
   const [sliderPosition, setSliderPosition] = useState(0);
@@ -19,37 +20,23 @@ export default React.memo(function CardSlider({ data, title }) {
   };
 
   return (
-    <Container
-      className="flex column"
-      showControls={showControls}
-      onMouseEnter={() => setShowControls(true)}
-      onMouseLeave={() => setShowControls(false)}
-    >
+    <Container className="flex column" showControls={showControls} onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
       <h2>{title}</h2>
       <div className="wrapper">
-        <div
-          className={`slider-action left ${
-            !showControls ? "none" : ""
-          } flex j-center a-center`}
-        >
+        <div className={`slider-action left ${!showControls ? "none" : "" } flex j-center a-center`}>
           <AiOutlineLeft onClick={() => handleDirection("left")} />
         </div>
         <div className="slider flex" ref={listRef}>
-          {data.map((movie, index) => {
-            return <Card movieData={movie} index={index} key={movie._id} />;
-          })}
+          {data.map((movie, index) => {return <Card movieData={movie} index={index} key={movie._id} />;})}
         </div>
-        <div
-          className={`slider-action right ${
-            !showControls ? "none" : ""
-          } flex j-center a-center`}
-        >
+        <div className={`slider-action right ${!showControls ? "none" : "" } flex j-center a-center`}>
           <AiOutlineRight onClick={() => handleDirection("right")} />
         </div>
       </div>
     </Container>
   );
 });
+
 const Container = styled.div`
   gap: 1rem;
   position: relative;

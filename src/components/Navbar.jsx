@@ -1,71 +1,61 @@
-import { signOut } from "firebase/auth";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
-import image_setting from "../assets/image_setting.png";
-import { FaPowerOff, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { MovieContext } from "../Providers/MovieProvider";
 import dropdown from "../assets/dropdown.png";
 import Menu2 from "./Menu_dropdown.jsx";
+import SigoutPopup from "./SignoutPopup.jsx"
+import { UserProfileContext } from "../Providers/UserProfile";
+import user1 from "../assets/user1.png";
+import user2 from "../assets/user2.png";
+import user3 from "../assets/user3.png";
 
 export default function Navbar({ isScrolled }) {
   const {setMyMovieSearch}=useContext(MovieContext);
+  const {activePic}=useContext( UserProfileContext);
   const navigate=useNavigate();
   const [showSearch, setShowSearch] = useState(false);
   const [inputHover, setInputHover] = useState(false);
   const [ishover, sethover]=useState(false);
- 
-
- 
-  const links = [
-    { name: "Home", link: "/" },
-    { name: "Movies", link: "/movies" },
-    { name: "My List", link: "/mylist" },
-  ];
-
+  const [inputHover2, setInputHover2] = useState(false);
+  let profilePhoto=user1;
+  if(activePic==='0') profilePhoto=user1;
+  if(activePic==='1') profilePhoto=user2;
+  if(activePic==='2') profilePhoto=user3;
+  const links = [{ name: "Home", link: "/" }, { name: "Movies", link: "/movies" }, { name: "My List", link: "/mylist" },];
 
   function debounce(fn, delay) {
     let timer
     return function (...args) {
       clearTimeout(timer)
       timer = setTimeout(()=>fn(...args), delay)
-    }}
+    }
+  }
 
   return (
+    <>
     <Container>
       <nav className={`${isScrolled ? "scrolled" : ""} flex`}>
         <div className="left flex a-center">
           <div className="brand flex a-center j-center">
-            <img src={logo} alt="Logo" />
+            <img src={logo} alt="Logo" onClick={() => navigate("/")}/>
           </div>
           <ul className="links flex">
-            {links.map(({ name, link }) => {
-              return (
-                <li key={name}>
-                  <Link to={link}>{name}</Link>
-                </li>
-              );
-            })}
+            {links.map(({ name, link }) => {return (<li key={name}><Link to={link}>{name}</Link></li>);})}
           </ul>
-          
-       
-          <div className="bro" onClick={()=>{sethover(()=>!ishover)}}>Browse <img src={dropdown}/> </div>
+          <div className="bro" onClick={()=>{sethover(()=>!ishover)}}>Browse <img src={dropdown} alt="menu_dropdown"/> </div>
           {ishover && <div className="menu2"><Menu2/></div>}
-          
         </div>
         <div className="right flex a-center">
           <div className={`search ${showSearch ? "show-search" : ""}`}>
             <button
               className="sear"
               onFocus={() => setShowSearch(true)}
-              onBlur={() => {
-                if (!inputHover) {
-                  setShowSearch(false);
-                }
-              }}
+              onBlur={() => {if (!inputHover){setShowSearch(false);}}}
             >
               <FaSearch />
             </button>
@@ -83,15 +73,19 @@ export default function Navbar({ isScrolled }) {
               onChange={debounce((e)=>{setMyMovieSearch(()=>{return e.target.value.toLowerCase()})},500)}
             />
           </div>
-          <button className="log" onClick={() => {
-             navigate("/login");
-             window.localStorage.removeItem("authToken");
-          }}>
-            <img src={image_setting} title="logout" alt="logout" width="32px" height="32px"/>
+          <button className="log">
+            <img src={profilePhoto} title="logout" alt="logout" width="32px" height="32px"  onMouseEnter={() => setInputHover2(true)}
+              onMouseLeave={() => setInputHover2(false)} 
+            />
           </button>
         </div>
       </nav>
+
+     <div className="Signpop" onMouseEnter={() => setInputHover2(true)} onMouseLeave={() => setInputHover2(false)}>
+        {inputHover2 && <SigoutPopup/>}
+     </div>
     </Container>
+    </>
   );
 }
 
@@ -101,13 +95,13 @@ const Container = styled.div`
   }
   nav {
     position: sticky;
+    z-index:1;
     top: 0;
     height: 6.5rem;
     width: 100%;
     justify-content: space-between;
     position: fixed;
     top: 0;
-    z-index: 2;
     padding: 0 4rem;
     align-items: center;
     transition: 0.3s ease-in-out;
@@ -128,6 +122,7 @@ const Container = styled.div`
           a {
             color: white;
             text-decoration: none;
+           
           }
         }
       }
@@ -225,7 +220,6 @@ const Container = styled.div`
           overflow: hidden;
       
         }
-
         .sear{
           width:0rem;
           overflow: hidden;
@@ -242,9 +236,18 @@ const Container = styled.div`
           padding: 0.3rem;
         }
       }
-
     }
-
-    
   }
+
+  .Signpop
+  {
+  position: fixed;
+  right:20px;
+  top: 1.5px;
+  z-index:10000;
+ }
 `;
+
+
+
+

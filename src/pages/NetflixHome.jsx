@@ -10,70 +10,49 @@ import Slider from "../components/Slider";
 import { MovieContext } from "../Providers/MovieProvider";
 import SearchMovies from "../components/SearchComponent";
 
-
 function Netflix() {
-
-  const {MyMovieSearch}=useContext(MovieContext);
+  const {myMovieSearch}=useContext(MovieContext);
   const {movieList}=useContext(MovieContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
- if(localStorage.getItem("authToken")==null){
+  if(localStorage.getItem("authToken")==null){
     navigate("/login");
   };
+  var needSearchOperation=0;
+  if(myMovieSearch?.length>0){needSearchOperation=1;}
 
- 
-
-var b=0;
-
-if(MyMovieSearch?.length>0){
-  b=1;
-}
-
-window.onstorage = () => {
-  // When local storage changes, dump the list to
-  // the console.
-  console.log(JSON.parse(window.localStorage.getItem("sampleList")));
-};
+  window.onstorage = () => {console.log(JSON.parse(window.localStorage.getItem("sampleList"))); };
 
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
     return () => (window.onscroll = null);
   };
 
-  
-
   return (
     <Container>
       <Navbar isScrolled={isScrolled} />
-
-      {b===1? <SearchMovies/> :<>
-      <div className="hero">
-        <img
-          src={backgroundImage}
-          alt="background"
-          className="background-image"
-        />
-        <div className="container">
-          <div className="logo">
-            <img src={MovieLogo} alt="Movie Logo" />
-          </div>
-          <div className="buttons flex">
-            <button
-              onClick={() => navigate("/player")}
-              className="flex j-center a-center"
-            >
-              <FaPlay />
-              Play
-            </button>
-            <button className="flex j-center a-center">
-              <AiOutlineInfoCircle />
-              More Info
-            </button>
+      {needSearchOperation===1? <SearchMovies/>:<>
+        <div className="hero">
+          <img src={backgroundImage} alt="background" className="background-image"/>
+          <div className="container">
+            <div className="logo">
+              <img src={MovieLogo} alt="Movie Logo" />
+            </div>
+            <div className="buttons flex">
+              <button onClick={() => navigate("/player")} className="flex j-center a-center">
+                <FaPlay />
+                Play
+              </button>
+              <button className="flex j-center a-center">
+                <AiOutlineInfoCircle />
+                More Info
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <Slider movies={movieList} /></>}
+        <Slider movies={movieList} /></>
+      }
     </Container>
   );
 }
@@ -104,8 +83,8 @@ const Container = styled.div`
         margin: 5rem;
         gap: 2rem;
         button {
-          font-size: 3vw;
-          gap: 1rem;
+          font-size: 2.5vw;
+          gap: 0.4rem;
           border-radius: 0.2rem;
           padding: 0.5rem;
           padding-left: 0.5vw;

@@ -7,103 +7,39 @@ import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 import { BsCheck } from "react-icons/bs";
 import video from "../assets/video.mp4";
-import axios from "axios";
-import { UserContext } from "../Providers/UserProvider";
 import { useContext } from "react";
-import { MyMovieListContext } from "../Providers/Myownlist";
-import { MySearchContext } from "../Providers/Search_movie";
+import { UserLikedListContext } from "../Providers/UserLikedList";
 
-export default React.memo(function Card({ index, movieData, isLiked = false }) {
-  const {MyMovieList,setMyMovieList}=useContext(MyMovieListContext)
+export default React.memo(function Card({ movieData, isLiked = false }) {
+  const {userLikedList, setUserLikedList}=useContext(UserLikedListContext)
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const MyMovieListids=userLikedList.map((mov)=> mov._id);
 
+  if(MyMovieListids.includes(movieData._id)){ isLiked=true;}
 
-  /*
-  const value=localStorage.getItem("authToken");
-  console.log(value);
-  
-
-  var myHeaders = new Headers();
- 
-
-  myHeaders.append("Content-Type", "application/json");
-  
-
-  
-  var requestOptions = {
-    method: 'PATCH',
-    headers: {"Authorization":`Bearer ${value}`,
-              "projectID": "f104bi07c490" },
-    body: {
-      "showid": `${movieData._id}`
-       },
-  };
-  
-
-
-  const addToList = async () => {
-    console.log(movieData);
-    fetch("https://academics.newtonschool.co/api/v1/ott/watchlist/like", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-  };
-
-  const removeMovieFromLiked=async () => {
-    console.log(movieData);
-    fetch("https://academics.newtonschool.co/api/v1/ott/watchlist/like", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-};*/
-
-
-const mylistoperation =  () => {
-   var bool = MyMovieList.filter((movie)=>{
-      return movie._id===movieData._id
-   })
-
-   if(bool.length===0){
-    setMyMovieList([...MyMovieList,movieData])  
+  const mylistoperation =  () => {
+   var isMyMovie = userLikedList.filter((movie)=>{return movie._id===movieData._id})
+   if(isMyMovie.length===0){
+     setUserLikedList([...userLikedList,movieData])  
    }
    else{
-      setMyMovieList(MyMovieList.filter((movie)=>{
-          return movie._id !== movieData._id;
+      setUserLikedList(userLikedList.filter((movie)=>{
+        return movie._id !== movieData._id;
       }))
-   }
-};
+    }
+  };
 
-
- 
   return (
-    <Container
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <Container onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        
+      <img src={movieData.thumbnail} alt="card" onClick={() => navigate("/player")}/>
     
-      <img
-        src={movieData.thumbnail}
-        alt="card"
-        onClick={() => navigate("/player")}
-      />
-   
-
       {isHovered && (
         <div className="hover">
           <div className="image-video-container">
-            <img
-              src={movieData.thumbnail}
-              alt="card"
-              onClick={() => navigate("/player")}
-            />
-            <video
-              src={video}
-              autoPlay={true}
-              loop
-              muted
-              onClick={() => navigate("/player")}
-            />
+            <img src={movieData.thumbnail} alt="card" onClick={() => navigate("/player")}/>
+            <video src={video} autoPlay={true} loop muted onClick={() => navigate("/player")}/>
           </div>
           <div className="info-container flex column">
             <h3 className="name" onClick={() => navigate("/player")}>
@@ -111,22 +47,13 @@ const mylistoperation =  () => {
             </h3>
             <div className="icons flex j-between">
               <div className="controls flex">
-                <IoPlayCircleSharp
-                  title="Play"
-                  onClick={() => navigate("/player")}
-                />
+                <IoPlayCircleSharp title="Play" onClick={() => navigate("/player")}/>
                 <RiThumbUpFill title="Like" />
                 <RiThumbDownFill title="Dislike" />
-                {isLiked ? (
-                  <BsCheck
-                    title="Remove from List"
-                    onClick={() =>
-                      mylistoperation()
-                    }
-                  />
-                ) : (
-                  <AiOutlinePlus title="Add to my list" onClick={()=>mylistoperation()} />
-                )}
+                {isLiked ? 
+                  (<BsCheck title="Remove from List" onClick={() => mylistoperation()}/>) : 
+                  (<AiOutlinePlus title="Add to my list" onClick={()=>mylistoperation()} />)
+                }
               </div>
               <div className="info">
                 <BiChevronDown title="More Info" />
@@ -142,6 +69,7 @@ const mylistoperation =  () => {
           </div>
         </div>
       )}
+
     </Container>
   );
 });
@@ -165,9 +93,6 @@ const Container = styled.div`
     width: 194px;
     height: 208px;
   }
-
- 
-
 
   cursor: pointer;
   position: relative;

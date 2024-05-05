@@ -4,10 +4,8 @@ export const UserContext = createContext();
 
 export function UserProvider(props) {
   // component -> provider
-
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-
   const children = props.children;
 
   // we create new user
@@ -27,22 +25,10 @@ export function UserProvider(props) {
     setUser(null);
     setToken(null);
   }
-
-  const value = {
-    isUserLoggedIn: !!user,
-    user,
-    token,
-    signUpContext,
-    signInContext,
-    signOutContext,
-  };
-
-  console.log(value, "inside value context");
-
+  
+  const value = {isUserLoggedIn: !!user, user, token, signUpContext, signInContext, signOutContext,};
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
-
-// custom hook
 
 export function useUser() {
   return useContext(UserContext);

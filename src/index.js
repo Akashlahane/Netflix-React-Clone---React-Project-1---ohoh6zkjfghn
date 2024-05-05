@@ -3,23 +3,26 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { MovieProvider } from './Providers/MovieProvider';
-import { UserProvider } from './Providers/UserProvider';
-import { MyMovieProvider } from './Providers/Myownlist';
-import { MyMovieSearchProvider } from './Providers/Search_movie';
-
+import { UserProvider } from './Providers/UserAuthentication.js';
+import {UserLikedMovieProvider } from './Providers/UserLikedList';
+import { UserProfileProvider } from './Providers/UserProfile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <MyMovieProvider>
+
     <UserProvider>
-    <MovieProvider>
-      <MyMovieSearchProvider>
-      <App />
-      </MyMovieSearchProvider>
-    </MovieProvider>
+      <UserProfileProvider>
+        <MovieProvider>
+          <UserLikedMovieProvider>
+            
+            <App/>
+
+          </UserLikedMovieProvider>    
+        </MovieProvider>
+      </UserProfileProvider>
     </UserProvider>
-    </MyMovieProvider>
+  
   </React.StrictMode>
 );
 

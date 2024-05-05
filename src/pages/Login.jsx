@@ -1,18 +1,13 @@
 import { useState } from "react";
-import { useUser } from "../Providers/UserProvider";
+import { useUser } from "../Providers/UserAuthentication.js";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackgroundImage from "../components/BackgroundImage";
 import Header from "../components/Header";
 
-
 function Login() {
   const { signInContext } = useUser();
-
   const navigate = useNavigate();
-
- 
-
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
@@ -22,23 +17,17 @@ function Login() {
   function handleChange(event) {
     const element = event.target;
     const { name, value } = element;
-
     setUserInfo((oldInfo) => {
-      return {
-        ...oldInfo,
-        [name]: value,
-      };
+      return {...oldInfo, [name]: value,};
     });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-
     if (!userInfo.email || !userInfo.password) {
       alert("add the password and the login");
       return;
     }
-
     signIn(userInfo);
   }
 
@@ -47,7 +36,6 @@ function Login() {
       var myHeaders = new Headers();
       myHeaders.append("projectId", "f104bi07c490");
       myHeaders.append("Content-Type", "application/json");
-
       const url = "https://academics.newtonschool.co/api/v1/user/login";
       var payload = {
         ...userInfo,
@@ -64,23 +52,23 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-
         const { token, data: loginData } = data;
         const { name: userName } = loginData;
         localStorage.setItem("authToken", token);
         localStorage.setItem("userInfo", userName);
         signInContext(token, userName);
-        navigate("/");
-      } else {
+        navigate("/addprofile");
+      } 
+      else {
         alert("Sign in to create new account");
         navigate("/signup");
       }
-    } catch (error) {
+    }
+    catch (error){
       console.log(error);
     }
   }
   
-
   return (
     <Container>
       <BackgroundImage />
@@ -88,26 +76,12 @@ function Login() {
         <Header signup/>
         <div className="form-container flex column a-center j-center">
           <div className="form flex column a-center j-center">
-            <div className="title">
-              <h3>Login</h3>
-            </div>
+            <div className="title"><h3>Login</h3></div>
             <div className="container flex column">
-        <input
-          type="text"
-          name="email"
-          id="username"
-          onChange={(event) => handleChange(event)}
-        />
-
-         <input
-          type="password"
-          name="password"
-          id="password"
-          onChange={(event) => handleChange(event)}
-        />
-              
+              <input type="text" name="email" id="username" onChange={(event) => handleChange(event)}/>
+              <input type="password" name="password" id="password" onChange={(event) => handleChange(event)}/>
               <button onClick={handleSubmit}>Login to your account</button>
-            </div>
+           </div>
           </div>
         </div>
       </div>

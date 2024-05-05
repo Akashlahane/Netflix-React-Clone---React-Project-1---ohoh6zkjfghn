@@ -3,16 +3,11 @@ import styled from "styled-components";
 import BackgroundImage from '../components/BackgroundImage';
 import Header from '../components/Header';
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../Providers/UserProvider";
-
+import { useUser } from "../Providers/UserAuthentication.js";
 
 export default function Signup() {
- 
-
   const { signUpContext } = useUser();
-
   const navigate = useNavigate();
-
   const [userInfo, setUserInfo] = useState({
     name: "as",
     email: "",
@@ -23,7 +18,6 @@ export default function Signup() {
   function handleChange(event) {
     const element = event.target;
     const { name, value } = element;
-
     setUserInfo((oldInfo) => {
       return {
         ...oldInfo,
@@ -34,12 +28,10 @@ export default function Signup() {
 
   function handleSubmit(event) {
     event.preventDefault();
-
     if (!userInfo.email || !userInfo.password) {
       alert("add the password and the amail");
       return;
     }
-
     signIn(userInfo);
   }
 
@@ -48,35 +40,27 @@ export default function Signup() {
       var myHeaders = new Headers();
       myHeaders.append("projectId", "f104bi07c490");
       myHeaders.append("Content-Type", "application/json");
-
       const url = "https://academics.newtonschool.co/api/v1/user/signup";
-      var payload = {
-        ...userInfo,
-      };
-
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify(payload),
-        redirect: "follow",
-      };
-
+      var payload = {...userInfo,};
+      var requestOptions = {method: "POST", headers: myHeaders, body: JSON.stringify(payload), redirect: "follow",};
       const response = await fetch(url, requestOptions);
 
-      if (response.ok) {
+      if (response.ok){
         const data = await response.json();
-
         const { token, data: loginData } = data;
         const { name: userName } = loginData;
         localStorage.setItem("authToken", token);
         localStorage.setItem("userInfo", userName);
         signUpContext(token, userName);
-        navigate("/");
-      } else {
+        navigate("/addprofile");
+      } 
+      else {
         alert("Sign in to create new account");
         navigate("/signup");
       }
-    } catch (error) {
+      
+    } 
+    catch (error) {
       console.log(error);
     }
   }
@@ -86,28 +70,22 @@ export default function Signup() {
   return <Container showPassword={showPassword}>
     <BackgroundImage/>
     <div className="content">
-    <Header login/>
-  <div className="body flex column a-center j-center">
-    <div className="text flex column">
-    <h1>Unlimited movies, TV shows and more</h1>
-    <h4>Watch anywhere. Cancel anytime.</h4>
-    <h6>Ready to watch? Enter your email to create or restart membership</h6>
+      <Header login/>
+      <div className="body flex column a-center j-center">
+        <div className="text flex column">
+        <h1>Unlimited movies, TV shows and more</h1>
+        <h4>Watch anywhere. Cancel anytime.</h4>
+        <h6>Ready to watch? Enter your email to create or restart membership</h6>
+        </div>
+        <div className="form">
+          <input type="email" name="email" placeholder='Email Address'  onChange={(event) => handleChange(event)}/>
+          {showPassword && (<input type="password" placeholder='Password' name="password"  onChange={(event) => handleChange(event)}/>)}
+          {!showPassword && <button onClick={() => setShowPassword(true)}>Get Started</button>}
+        </div>
+        <button onClick={handleSubmit}>Sign up</button>
+      </div>
     </div>
-    <div className="form">
-      <input type="email" name="email" placeholder='Email Address'  onChange={(event) => handleChange(event)}/>
-      {showPassword && (
-      <input type="password" placeholder='Password' name="password"  onChange={(event) => handleChange(event)}/>
-)}
-      {
-        !showPassword && <button onClick={() => setShowPassword(true)}>Get Started</button>
-      }
-      
-    </div>
-      <button onClick={handleSubmit}>Sign up</button>
-  </div>
-  </div>
   </Container>
-  
 }
 
 const Container = styled.div`

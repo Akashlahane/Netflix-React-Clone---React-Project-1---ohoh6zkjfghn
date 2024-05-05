@@ -2,11 +2,12 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components'
 import logo from "../assets/logo.png"
+
 export default function Header(props) {
   const navigate = useNavigate();
   return <Container className="flex a-center j-between">
     <div className="logo">
-      <img src={logo} alt="netflix logo " />
+      <img src={logo} alt="netflix logo "/>
     </div>
     <button onClick={() => navigate(props.signup? "/signup" : "/login")}>
       {props.signup? "Sig Up" : "Log in"}
