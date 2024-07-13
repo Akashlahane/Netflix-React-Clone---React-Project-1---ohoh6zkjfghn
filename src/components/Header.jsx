@@ -10,7 +10,7 @@ export default function Header(props) {
       <img src={logo} alt="netflix logo "/>
     </div>
     <button onClick={() => navigate(props.signup? "/signup" : "/login")}>
-      {props.signup? "Sig Up" : "Log in"}
+      {props.signup? "Sign Up" : "Log in"}
     </button>
   </Container>
 }

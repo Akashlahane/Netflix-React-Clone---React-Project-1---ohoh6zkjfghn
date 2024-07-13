@@ -6,6 +6,8 @@ import Slider from "../components/Slider";
 import NotAvailable from "../components/NotAvailable";
 import { MovieContext } from "../Providers/MovieProvider";
 import SearchMovies from "../components/SearchComponent";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function MoviePage() {
   const {movieList}=useContext(MovieContext);
@@ -52,6 +54,7 @@ function MoviePage() {
           </div>
         </> 
       }
+      <ToastContainer position="top-right" />
     </Container>
   );
 }

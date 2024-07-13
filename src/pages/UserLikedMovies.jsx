@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar";
 import { useContext } from "react";
 import { UserLikedListContext } from "../Providers/UserLikedList";
 import { MovieContext } from "../Providers/MovieProvider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function UserListedMovies() {
   const {userLikedList}=useContext(UserLikedListContext)
@@ -35,6 +37,7 @@ export default function UserListedMovies() {
           })}
         </div>
       </div>
+      <ToastContainer position="top-right" />
     </Container>
   );
 }

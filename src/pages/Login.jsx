@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackgroundImage from "../components/BackgroundImage";
 import Header from "../components/Header";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing icons
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
   const { signInContext } = useUser();
@@ -13,6 +16,10 @@ function Login() {
     password: "",
     appType: "ott",
   });
+
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
+  const notify = (str) => toast.error(str);
 
   function handleChange(event) {
     const element = event.target;
@@ -25,7 +32,7 @@ function Login() {
   function handleSubmit(event) {
     event.preventDefault();
     if (!userInfo.email || !userInfo.password) {
-      alert("add the password and the login");
+      notify("Enter Email and Password");
       return;
     }
     signIn(userInfo);
@@ -57,11 +64,11 @@ function Login() {
         localStorage.setItem("authToken", token);
         localStorage.setItem("userInfo", userName);
         signInContext(token, userName);
-        navigate("/addprofile");
+        navigate("/");
       } 
       else {
-        alert("Sign in to create new account");
-        navigate("/signup");
+        notify("Sign up to create new account");
+        setTimeout(()=>navigate("/signup"),5000);
       }
     }
     catch (error){
@@ -76,16 +83,31 @@ function Login() {
         <Header signup/>
         <div className="form-container flex column a-center j-center">
           <div className="form flex column a-center j-center">
-            <div className="title"><h3>Login</h3></div>
+            <div className="title"><h3>Login to Netflix</h3></div>
             <div className="container flex column">
-              <input type="text" name="email" id="username" onChange={(event) => handleChange(event)}/>
-              <input type="password" name="password" id="password" onChange={(event) => handleChange(event)}/>
-              <button onClick={handleSubmit}>Login to your account</button>
+              <input type="text" name="email" id="username" onChange={(event) => handleChange(event)} placeholder="Email"/>
+              
+              <div className="password-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  onChange={(event) => handleChange(event)}
+                  placeholder="Password"
+                />
+                <span onClick={() => setShowPassword(!showPassword)}>
+                  {!showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+
+              <button onClick={handleSubmit}>Log in</button>
            </div>
           </div>
         </div>
       </div>
+      <ToastContainer position="top-right" />
     </Container>
+    
   );
 }
 
@@ -123,6 +145,23 @@ const Container = styled.div`
             border-radius: 0.2rem;
             font-weight: bolder;
             font-size: 1.05rem;
+          }
+        }
+
+         .password-container {
+          display: flex;
+          align-items: center;
+          width: 100%; // Ensure container takes full width
+          position: relative;
+          input {
+            flex: 1;
+            padding-right: 2rem; // Make room for the icon
+          }
+          span {
+            position: absolute;
+            right: 0.5rem; // Position the icon inside the input
+            cursor: pointer;
+            color: #888; // Icon color
           }
         }
       }

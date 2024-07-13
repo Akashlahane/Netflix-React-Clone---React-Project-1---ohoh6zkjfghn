@@ -4,6 +4,9 @@ import BackgroundImage from '../components/BackgroundImage';
 import Header from '../components/Header';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../Providers/UserAuthentication.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing icons
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Signup() {
   const { signUpContext } = useUser();
@@ -14,6 +17,8 @@ export default function Signup() {
     password: "",
     appType: "ott",
   });
+
+  const notify = (str) => toast.error(str);
 
   function handleChange(event) {
     const element = event.target;
@@ -29,7 +34,7 @@ export default function Signup() {
   function handleSubmit(event) {
     event.preventDefault();
     if (!userInfo.email || !userInfo.password) {
-      alert("add the password and the amail");
+      notify("Enter Email and Password");
       return;
     }
     signIn(userInfo);
@@ -52,10 +57,10 @@ export default function Signup() {
         localStorage.setItem("authToken", token);
         localStorage.setItem("userInfo", userName);
         signUpContext(token, userName);
-        navigate("/addprofile");
+        navigate("/");
       } 
       else {
-        alert("Sign in to create new account");
+        notify("Sign in to create new account");
         navigate("/signup");
       }
       
@@ -65,7 +70,7 @@ export default function Signup() {
     }
   }
 
-  const[showPassword, setShowPassword] = useState(false)
+  const[showPassword, setShowPassword] = useState(false);
  
   return <Container showPassword={showPassword}>
     <BackgroundImage/>
@@ -79,70 +84,103 @@ export default function Signup() {
         </div>
         <div className="form">
           <input type="email" name="email" placeholder='Email Address'  onChange={(event) => handleChange(event)}/>
-          {showPassword && (<input type="password" placeholder='Password' name="password"  onChange={(event) => handleChange(event)}/>)}
-          {!showPassword && <button onClick={() => setShowPassword(true)}>Get Started</button>}
+          <div className="password-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  onChange={(event) => handleChange(event)}
+                  placeholder="Password"
+                />
+                <span onClick={() => setShowPassword(!showPassword)}>
+                  {!showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
         </div>
         <button onClick={handleSubmit}>Sign up</button>
       </div>
     </div>
+    <ToastContainer position="top-right" />
   </Container>
 }
 
 const Container = styled.div`
-    position: relative;
-    .content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      height: 100vh;
-      width:100vw;
-      display: grid;
-      grid-template-rows: 15vh 85vh;
-      .body {
+  position: relative;
+  .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    grid-template-rows: 15vh 85vh;
+    .body {
+      gap: 1rem;
+      .text {
         gap: 1rem;
-        .text {
-          gap: 1rem;
-          text-align: center;
-          font-size: 2rem;
-          h1 {
-            padding: 0 25rem;
-          }
+        text-align: center;
+        font-size: 2rem;
+        margin-top: -5rem; // Move the text upward
+        h1 {
+          padding: 0 25rem;
         }
-        .form {
-          display: grid;
-          grid-template-columns: ${({ showPassword }) => showPassword ? "1fr 1fr" : "2fr 1fr"};
+      }
+      .form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
         width: 60%;
-          width: 60%;
-          input {
-            color: black;
-            border: none;
-            padding: 1.5rem;
-            font-size: 1.2rem;
-            border: 1px solid black;
-            &:focus {
-              outline: none;
-            }
-          }
-          button {
-            padding: 0.5rem 1rem;
-            background-color: #e50914;
-            border: none;
-            cursor: pointer;
-            color: white;
-            font-weight: bolder;
-            font-size: 1.05rem;
+        input {
+          color: black;
+          border: none;
+          padding: 1.5rem;
+          font-size: 1.2rem;
+          border: 1px solid black;
+          width: 50%; // Ensure inputs take the full width of the form container
+          box-sizing: border-box;
+          &:focus {
+            outline: none;
           }
         }
         button {
-          padding: 0.5rem 1rem;
+          padding: 0.5rem 0.5rem;
           background-color: #e50914;
           border: none;
           cursor: pointer;
           color: white;
-          border-radius: 0.2rem;
           font-weight: bolder;
           font-size: 1.05rem;
         }
+      }
+      button {
+        padding: 0.5rem 1rem;
+        background-color: #e50914;
+        border: none;
+        cursor: pointer;
+        color: white;
+        border-radius: 0.2rem;
+        font-weight: bolder;
+        font-size: 1.05rem;
+        margin-top: 1rem; // Add space between form and button
+      }
+      .password-container {
+        display: flex;
+        align-items: center;
+        width: 50%; // Ensure container takes full width
+        position: relative;
+        input {
+          flex: 1;
+          padding-right: 2rem; // Make room for the icon
+        }
+        span {
+          position: absolute;
+          right: 0.5rem; // Position the icon inside the input
+          cursor: pointer;
+          color: #888; // Icon color
+        }
+      }
     }
+  }
 `;

@@ -4,7 +4,7 @@ export const UserProfileContext = createContext();
 
 export function UserProfileProvider(props){
   const { children } = props;
-  const [user, setMyuser] = useState([]);
+  const [user, setMyuser] = useState(["Guest"]);
   const [activePic, setActivePic]=useState(0);
 
   return (

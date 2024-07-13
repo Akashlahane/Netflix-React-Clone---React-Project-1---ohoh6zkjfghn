@@ -5,10 +5,12 @@ import backgroundImage from "../assets/home.jpg";
 import MovieLogo from "../assets/homeTitle.webp";
 import { useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+//import { AiOutlineInfoCircle } from "react-icons/ai";
 import Slider from "../components/Slider";
 import { MovieContext } from "../Providers/MovieProvider";
 import SearchMovies from "../components/SearchComponent";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Netflix() {
   const {myMovieSearch}=useContext(MovieContext);
@@ -29,6 +31,8 @@ function Netflix() {
     return () => (window.onscroll = null);
   };
 
+  const notify = () => toast("Feature coming soon");
+
   return (
     <Container>
       <Navbar isScrolled={isScrolled} />
@@ -44,15 +48,16 @@ function Netflix() {
                 <FaPlay />
                 Play
               </button>
-              <button className="flex j-center a-center">
+              {/*<button className="flex j-center a-center" onClick={notify}>
                 <AiOutlineInfoCircle />
-                More Info
-              </button>
+               More Info
+              </button>*/}
             </div>
           </div>
         </div>
         <Slider movies={movieList} /></>
       }
+      <ToastContainer position="top-right" />
     </Container>
   );
 }
@@ -76,18 +81,18 @@ const Container = styled.div`
         img {
           width: 60vw;
           height: 100%;
-          margin-left: 5rem;
+          margin-left: 2.9rem;
         }
       }
       .buttons {
-        margin: 5rem;
+        margin: 5rem 2.6rem;
         gap: 2rem;
         button {
-          font-size: 2.5vw;
+          font-size: 1.5vw;
           gap: 0.4rem;
           border-radius: 0.2rem;
           padding: 0.5rem;
-          padding-left: 0.5vw;
+          padding-left: 0.3vw;
           padding-right: 0.9vw;
           border: none;
           cursor: pointer;

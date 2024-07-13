@@ -5,10 +5,13 @@ import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
-import { BsCheck } from "react-icons/bs";
+import { RiDeleteBin6Line } from "react-icons/ri";
+//import { BsCheck } from "react-icons/bs";
 import video from "../assets/video.mp4";
 import { useContext } from "react";
 import { UserLikedListContext } from "../Providers/UserLikedList";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default React.memo(function Card({ movieData, isLiked = false }) {
   const {userLikedList, setUserLikedList}=useContext(UserLikedListContext)
@@ -17,6 +20,8 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
   const MyMovieListids=userLikedList.map((mov)=> mov._id);
 
   if(MyMovieListids.includes(movieData._id)){ isLiked=true;}
+
+  const notify = () => toast("Feature coming soon");
 
   const mylistoperation =  () => {
    var isMyMovie = userLikedList.filter((movie)=>{return movie._id===movieData._id})
@@ -39,7 +44,7 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
         <div className="hover">
           <div className="image-video-container">
             <img src={movieData.thumbnail} alt="card" onClick={() => navigate("/player")}/>
-            <video src={video} autoPlay={true} loop muted onClick={() => navigate("/player")}/>
+            {/*<video src={video} autoPlay={false} loop muted onClick={() => navigate("/player")}/>*/}
           </div>
           <div className="info-container flex column">
             <h3 className="name" onClick={() => navigate("/player")}>
@@ -48,15 +53,15 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
             <div className="icons flex j-between">
               <div className="controls flex">
                 <IoPlayCircleSharp title="Play" onClick={() => navigate("/player")}/>
-                <RiThumbUpFill title="Like" />
-                <RiThumbDownFill title="Dislike" />
                 {isLiked ? 
-                  (<BsCheck title="Remove from List" onClick={() => mylistoperation()}/>) : 
+                  (<RiDeleteBin6Line title="Remove from List" onClick={() => mylistoperation()}/>) : 
                   (<AiOutlinePlus title="Add to my list" onClick={()=>mylistoperation()} />)
                 }
+                <RiThumbUpFill title="Like"  onClick={notify}/>
+                <RiThumbDownFill title="Dislike" onClick={notify}/>
               </div>
-              <div className="info">
-                <BiChevronDown title="More Info" />
+              <div className="info" >
+                <BiChevronDown title="More Info" onClick={notify} />
               </div>
             </div>
             <div className="genres flex">
@@ -69,7 +74,7 @@ export default React.memo(function Card({ movieData, isLiked = false }) {
           </div>
         </div>
       )}
-
+   
     </Container>
   );
 });
@@ -120,7 +125,7 @@ const Container = styled.div`
       img {
         width: 100%;
         height: 140px;
-        object-fit: cover;
+        object-fit: fill;
         border-radius: 0.3rem;
         top: 0;
         z-index: 4;
