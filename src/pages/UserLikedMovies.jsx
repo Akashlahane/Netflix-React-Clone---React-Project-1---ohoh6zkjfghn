@@ -29,13 +29,16 @@ export default function UserListedMovies() {
       <Navbar isScrolled={isScrolled} />
       <div className="content flex column">
         {myMovieSearch?.length===0 && <h1>My List</h1>}
-        <div className="grid flex">
-          {list1.map((movie, index) => {
-            return (
-              <Card movieData={movie} index={index} key={movie._id} isLiked={false} />
-            );
-          })}
-        </div>
+
+        {list1.length===0 ? <div className="empty-list flex">List is Empty</div> : 
+          <div className="grid flex">
+            {list1.map((movie, index) => {
+              return (
+                <Card movieData={movie} index={index} key={movie._id} isLiked={false} />
+              );
+            })}
+          </div>
+        }
       </div>
       <ToastContainer position="top-right" />
     </Container>
@@ -53,6 +56,16 @@ const Container = styled.div`
     .grid {
       flex-wrap: wrap;
       gap: 1rem;
+    }
+    .empty-list {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60vh; /* Adjust this height according to your needs */
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #555; /* Adjust the color to your preference */
+      width: 100%;
     }
   }
 `;
